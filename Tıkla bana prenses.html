@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Məni Bağışla</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #a8c8ec 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease-in-out infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 45px 25px;
+            text-align: center;
+            box-shadow: 
+                0 25px 50px rgba(102, 126, 234, 0.15),
+                0 15px 35px rgba(118, 75, 162, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            max-width: 90%;
+            width: 420px;
+            position: relative;
+            overflow: hidden;
+            animation: containerFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes containerFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(168, 200, 236, 0.5), transparent);
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .main-text {
+            font-size: 32px;
+            background: linear-gradient(135deg, #4a5fba, #6a4c93, #5a7bce);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 45px;
+            font-weight: 600;
+            line-height: 1.3;
+            text-shadow: 0 2px 8px rgba(106, 76, 147, 0.1);
+            animation: textGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.1); }
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 18px 25px;
+            margin: 18px 0;
+            border: none;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: none;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .forgive-btn {
+            background: linear-gradient(135deg, #a8c8ec 0%, #b8a9c9 50%, #c8b5db 100%);
+            color: #4a5fba;
+            box-shadow: 
+                0 8px 25px rgba(168, 200, 236, 0.3),
+                0 4px 10px rgba(184, 169, 201, 0.2);
+            border: 1px solid rgba(168, 200, 236, 0.3);
+        }
+
+        .forgive-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(168, 200, 236, 0.4),
+                0 8px 20px rgba(184, 169, 201, 0.3);
+            background: linear-gradient(135deg, #b8d2f0 0%, #c8b9d5 50%, #d8c5e7 100%);
+        }
+
+        .not-forgive-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e7cc3 100%);
+            color: white;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.3),
+                0 4px 10px rgba(118, 75, 162, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .not-forgive-btn:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 
+                0 15px 35px rgba(102, 126, 234, 0.4),
+                0 8px 20px rgba(118, 75, 162, 0.3);
+            background: linear-gradient(135deg, #7688ee 0%, #8659b2 50%, #9e8cd3 100%);
+        }
+
+        .response-message {
+            font-size: 26px;
+            margin: 25px 0;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #4a5fba;
+            text-shadow: 0 2px 8px rgba(74, 95, 186, 0.3);
+        }
+
+        .response-message .emoji {
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+            color: initial;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .response-message.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            animation: messageAppear 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes messageAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            50% {
+                transform: translateY(-5px) scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .heart, .confetti {
+            position: absolute;
+            animation-fill-mode: forwards;
+        }
+
+        .heart {
+            font-size: 32px;
+            animation: heartFall 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .confetti {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: confettiFall 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        @keyframes heartFall {
+            0% {
+                transform: translateY(-15vh) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(-5vh) rotate(20deg) scale(1);
+            }
+            85% {
+                opacity: 0.9;
+                transform: translateY(85vh) rotate(340deg) scale(0.8);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) scale(0.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-15vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+                transform: translateY(-5vh) rotate(90deg) scale(1);
+            }
+            85% {
+                opacity: 0.8;
+                transform: translateY(85vh) rotate(450deg) scale(0.7);
+            }
+            100% {
+                transform: translateY(100vh) rotate(540deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .emoji-big {
+            font-size: 45px;
+            margin: 15px;
+            animation: bounce 1.5s ease-in-out infinite;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 35px 20px;
+                margin: 15px;
+                width: 95%;
+            }
+            
+            .main-text {
+                font-size: 26px;
+                margin-bottom: 35px;
+            }
+            
+            .button {
+                padding: 15px 20px;
+                font-size: 16px;
+                margin: 15px 0;
+            }
+            
+            .response-message {
+                font-size: 22px;
+            }
+            
+            .heart {
+                font-size: 28px;
+            }
+            
+            .emoji-big {
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-text">Məni bağışla mən malım.</div>
+        
+        <button class="button forgive-btn" onclick="forgive()">Bağışladım</button>
+        <button class="button not-forgive-btn" onclick="notForgive()">Bağışlamıram</button>
+        
+        <div class="response-message" id="responseMessage"></div>
+    </div>
+
+    <div class="celebration" id="celebration"></div>
+
+    <script>
+        let refusalCount = 0;
+        const sadMessages = [
+            "Əminsənmi? 😢",
+            "Lütfən 😭",
+            "Çox pişmanam 😔",
+            "Bir şans ver 🥺",
+            "Məni bağışla 😥",
+            "Həqiqətən peşmanam 😞",
+            "Lütfən, yalvarıram 😢",
+            "Səni incitmək istəməmişdim 😔"
+        ];
+
+        function forgive() {
+            document.getElementById('responseMessage').innerHTML = '<span class="emoji">🎉</span> Təşəkkürlər, sen muhteşemsin! <span class="emoji">🎉</span>';
+            document.getElementById('responseMessage').className = 'response-message show';
+            
+            // Ürəklər və konfetilər yaratmaq
+            createCelebration();
+        }
+
+        function notForgive() {
+            const messageElement = document.getElementById('responseMessage');
+            const randomMessage = sadMessages[Math.floor(Math.random() * sadMessages.length)];
+            
+            // Emoji və mətni düzgün ayırırıq
+            const parts = randomMessage.split(' ');
+            const emoji = parts[parts.length - 1]; // sonuncu hissə emoji
+            const text = parts.slice(0, -1).join(' '); // qalan hissə mətn
+            
+            messageElement.innerHTML = text + ' <span class="emoji">' + emoji + '</span>';
+            messageElement.className = 'response-message show';
+            
+            refusalCount++;
+        }
+
+        function createCelebration() {
+            const celebration = document.getElementById('celebration');
+            celebration.innerHTML = '';
+            
+            // Bənövşəyi və mavi rəngli ürəklər
+            const heartEmojis = ['💜', '💙', '🤍', '💗', '💎', '✨', '🌟'];
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.left = (Math.random() * 90 + 5) + 'vw'; // 5-95% arası
+                    heart.style.animationDelay = Math.random() * 1.5 + 's';
+                    celebration.appendChild(heart);
+                    
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 3500);
+                }, i * 120);
+            }
+            
+            // Bənövşəyi və mavi konfetilər
+            const colors = ['#667eea', '#764ba2', '#a8c8ec', '#b8a9c9', '#c8b5db', '#e8e4f0'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = (Math.random() * 90 + 5) + 'vw';
+                    confetti.style.animationDelay = Math.random() * 1.5 + 's';
+                    celebration.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 4000);
+                }, i * 80);
+            }
+        }
+
+        // Mobil toxunuş hadisələri üçün
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    </script>
+</body>
+</html>
